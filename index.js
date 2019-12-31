@@ -1,46 +1,45 @@
-'use strict';
 const fetch = require('node-fetch');
 
-console.log('test');
+async function getNewPosts(subreddit, timeLimit){
+    let response = await getData(subreddit);
+    return await filterPosts(response, timeLimit);
+}
 
-/* return as array of objects, first post is oldest one
- * filter out useless info
- */
+async function getData(subreddit){
+    let response = await fetch(`https://old.reddit.com/r/${subreddit}/new.json?sort=new`);
+    return response.json()
+}
 
-console.log(Date.now());
+async function filterPosts(response, timeLimit){
+    const posts = response.data.children;
+    const currTime = Math.floor(Date.now()/1000);
 
+    //         const res = posts.filter(post => console.log((currTime - post.data.created_utc)));
 
-fetch('https://old.reddit.com/r/buildapcsales/new.json?sort=new')
-    .then((response) => {
-        return response.json();
-    })
-    .then((response) => {
+    const newPosts = posts.filter(post => (currTime - post.data.created_utc) < timeLimit);
 
-        const posts = response.data.children;
-        const currTime = Math.floor(Date.now()/1000);
+    let res = [];
 
-        //         const res = posts.filter(post => console.log((currTime - post.data.created_utc)));
+    newPosts.forEach(post => {
+        let obj = {};
 
-        const newPosts = posts.filter(post => (currTime - post.data.created_utc) < 9000);
+        obj.subreddit = post.data.subreddit;
+        obj.title = post.data.title;
+        obj.type = post.data.link_flair_text;
+        obj.domain = post.data.domain;
+        obj.url = post.data.url;
+        obj.permalink = `https://reddit.com${post.data.permalink}`;
 
-        let res = [];
-
-        console.log('posts!!!!');
-
-        newPosts.forEach(post => {
-            let obj = {};
-
-            obj.subreddit = post.data.subreddit;
-            obj.title = post.data.title;
-            obj.type = post.data.link_flair_text;
-            obj.domain = post.data.domain;
-            obj.url = post.data.url;
-            obj.permalink = `https://reddit.com${post.data.permalink}`;
-
-            res.push(obj);
-        });
-
-        console.log(posts.length);
-        console.log(newPosts.length);
-        console.log(res);
+        res.push(obj);
     });
+
+    return res;
+}
+
+
+async function test(){
+    let data = await getNewPosts('frugalmalefashion', 20000);
+    console.log(data);
+}
+
+test();
