@@ -12,10 +12,7 @@ async function getData(subreddit){
 
 async function filterPosts(response, timeLimit){
     const posts = response.data.children;
-    const currTime = Math.floor(Date.now()/1000);
-
-    //         const res = posts.filter(post => console.log((currTime - post.data.created_utc)));
-
+    const currTime = Math.floor(Date.now() / 1000);
     const newPosts = posts.filter(post => (currTime - post.data.created_utc) < timeLimit);
 
     let res = [];
