@@ -1,4 +1,7 @@
 const fetch = require('node-fetch');
+const Discord = require('discord.js');
+const client = new Discord.Client();
+client.login('NjY0MzE3MTAzMTU4OTg0NzA0.XhVT1Q.GEETZZTnhIVNDOExtzAfH2XXF98');
 
 async function getNewPosts(subreddit, timeLimit){
     let response = await getData(subreddit);
@@ -34,9 +37,31 @@ async function filterPosts(response, timeLimit){
 }
 
 
+client.on('message', message => {
+    if (message.content === '!ping') {
+        // send back "Pong." to the channel the message was sent in
+        message.channel.send('Pong.');
+        const channel = client.channels.find('name', 'test');
+        channel.send('pls\npls\npls')
+    }
+});
+
+
+
+
+
 async function test(){
-    let data = await getNewPosts('frugalmalefashion', 20000);
+    let data = await getNewPosts('frugalmalefashion', 10000);
     console.log(data);
+    const channel = client.channels.find('name', 'test');
+
+    data.forEach(post => {
+
+        channel.send(`item: ${post.title}\ntype: ${post.type}\n${post.url}`
+        )
+
+    });
+
 }
 
 test();
