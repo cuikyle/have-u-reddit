@@ -9,6 +9,8 @@ async function getNewPosts(subreddit, timeLimit){
     return await filterPosts(response, timeLimit);
 }
 
+let count = 0;
+
 async function getData(subreddit){
     let response = await fetch(`https://old.reddit.com/r/${subreddit}/new.json?sort=new`);
     return response.json()
@@ -53,13 +55,10 @@ client.on('message', message => {
 async function sendMessages(subreddit, timeLimit, removeFirstWord){
     let data = await getNewPosts(subreddit, timeLimit);
     const channel = client.channels.find('name', subreddit);
-
-    console.log(data);
-
+    
     data.forEach(post => {
 
-        console.log(post.title);
-        console.log(removeFirstWord ? post.title.substr(post.title.indexOf(" ") + 1) : post.title);
+        count += 1;
 
         try {
             const info = new Discord.RichEmbed()
