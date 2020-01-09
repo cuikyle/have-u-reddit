@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const CronJob = require('cron').CronJob;
 client.login('NjY0MzE3MTAzMTU4OTg0NzA0.XhVT1Q.GEETZZTnhIVNDOExtzAfH2XXF98');
 
 async function getNewPosts(subreddit, timeLimit){
@@ -29,6 +30,7 @@ async function filterPosts(response, timeLimit){
         obj.domain = post.data.domain;
         obj.url = post.data.url;
         obj.permalink = `https://reddit.com${post.data.permalink}`;
+        obj.thumbnail = ['self', 'default'].indexOf(post.data.thumbnail) !== -1 ? 'https://www.redditstatic.com/new-icon.png' : post.data.thumbnail;
 
         res.push(obj);
     });
@@ -48,20 +50,42 @@ client.on('message', message => {
 
 
 
-
-
-async function test(){
-    let data = await getNewPosts('frugalmalefashion', 10000);
-    console.log(data);
-    const channel = client.channels.find('name', 'test');
+async function sendMessages(subreddit, timeLimit){
+    let data = await getNewPosts(subreddit, timeLimit);
+    const channel = client.channels.find('name', subreddit);
 
     data.forEach(post => {
 
-        channel.send(`item: ${post.title}\ntype: ${post.type}\n${post.url}`
-        )
+        try {
+            const info = new Discord.RichEmbed()
+                .setColor('#0099ff')
+                .setTitle(post.type)
+                .setURL(post.permalink)
+                .setAuthor(post.domain, '', post.url)
+                .setDescription(post.title)
+                .setTimestamp()
+                .setThumbnail(post.thumbnail);
+
+            channel.send(info);
+        } catch (err) {
+            console.log('error')
+        }
 
     });
 
 }
 
-test();
+
+console.log('Before job instantiation');
+const job = new CronJob('*/10 * * * * ', function() {
+    const d = new Date();
+    console.log('Ten minutes:', d);
+    console.log('Posts sent:', count);
+    sendMessages('buildapcsales', 600);
+    sendMessages('frugalmalefashion', 600);
+});
+console.log('After job instantiation');
+job.start();
+console.log('Job started!');
+
+console.log(process.env.DISCORD_TOKEN);
