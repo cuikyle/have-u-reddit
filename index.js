@@ -55,7 +55,7 @@ client.on('message', message => {
 async function sendMessages(subreddit, timeLimit, removeFirstWord){
     let data = await getNewPosts(subreddit, timeLimit);
     const channel = client.channels.find('name', subreddit);
-    
+
     data.forEach(post => {
 
         count += 1;
@@ -86,6 +86,9 @@ const job = new CronJob('*/5 * * * * ', function() {
     console.log('Posts sent:', count);
     sendMessages('buildapcsales', 300, true);
     sendMessages('frugalmalefashion', 300, false);
+    sendMessages('frugalmalefashioncdn', 300, false);
+    sendMessages('buildapcsales', 300, false);
+
 });
 console.log('After job instantiation');
 job.start();
