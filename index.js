@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const CronJob = require('cron').CronJob;
-client.login('NjY0MzE3MTAzMTU4OTg0NzA0.XhVT1Q.GEETZZTnhIVNDOExtzAfH2XXF98');
+client.login(process.env.DISCORD_TOKEN);
 
 async function getNewPosts(subreddit, timeLimit){
     let response = await getData(subreddit);
@@ -64,7 +64,7 @@ async function sendMessages(subreddit, timeLimit, removeFirstWord){
         try {
             const info = new Discord.RichEmbed()
                 .setColor('#0099ff')
-                .setTitle(post.type)
+                .setTitle(post.type === 'null' ? 'No flair' : post.type)
                 .setURL(post.permalink)
                 .setAuthor(post.domain, '', post.url)
                 .setDescription( removeFirstWord ? post.title.substr(post.title.indexOf(" ") + 1) : post.title)
