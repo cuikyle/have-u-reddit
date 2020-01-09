@@ -50,11 +50,16 @@ client.on('message', message => {
 
 
 
-async function sendMessages(subreddit, timeLimit){
+async function sendMessages(subreddit, timeLimit, removeFirstWord){
     let data = await getNewPosts(subreddit, timeLimit);
     const channel = client.channels.find('name', subreddit);
 
+    console.log(data);
+
     data.forEach(post => {
+
+        console.log(post.title);
+        console.log(removeFirstWord ? post.title.substr(post.title.indexOf(" ") + 1) : post.title);
 
         try {
             const info = new Discord.RichEmbed()
@@ -62,27 +67,26 @@ async function sendMessages(subreddit, timeLimit){
                 .setTitle(post.type)
                 .setURL(post.permalink)
                 .setAuthor(post.domain, '', post.url)
-                .setDescription(post.title)
+                .setDescription( removeFirstWord ? post.title.substr(post.title.indexOf(" ") + 1) : post.title)
                 .setTimestamp()
                 .setThumbnail(post.thumbnail);
 
             channel.send(info);
         } catch (err) {
-            console.log('error')
+            console.log(err)
         }
 
     });
 
 }
 
-
 console.log('Before job instantiation');
-const job = new CronJob('*/10 * * * * ', function() {
+const job = new CronJob('*/5 * * * * ', function() {
     const d = new Date();
     console.log('Ten minutes:', d);
     console.log('Posts sent:', count);
-    sendMessages('buildapcsales', 600);
-    sendMessages('frugalmalefashion', 600);
+    sendMessages('buildapcsales', 300, true);
+    sendMessages('frugalmalefashion', 300, false);
 });
 console.log('After job instantiation');
 job.start();
