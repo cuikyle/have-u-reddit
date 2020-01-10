@@ -80,14 +80,14 @@ async function sendMessages(subreddit, timeLimit, removeFirstWord){
 }
 
 console.log('Before job instantiation');
-const job = new CronJob('*/5 * * * * ', function() {
+const job = new CronJob('*/5 * * * *', function() {
     const d = new Date();
     console.log('Ten minutes:', d);
     console.log('Posts sent:', count);
     sendMessages('buildapcsales', 300, true);
     sendMessages('frugalmalefashion', 300, false);
     sendMessages('frugalmalefashioncdn', 300, false);
-    sendMessages('buildapcsales', 300, false);
+    sendMessages('bapcsalescanada', 300, false);
 
 });
 console.log('After job instantiation');
