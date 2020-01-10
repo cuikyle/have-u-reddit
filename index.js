@@ -63,7 +63,7 @@ async function sendMessages(subreddit, timeLimit, removeFirstWord){
         try {
             const info = new Discord.RichEmbed()
                 .setColor('#0099ff')
-                .setTitle(post.type === 'null' ? 'No flair' : post.type)
+                .setTitle(post.type == null ? 'No flair' : post.type)
                 .setURL(post.permalink)
                 .setAuthor(post.domain, '', post.url)
                 .setDescription( removeFirstWord ? post.title.substr(post.title.indexOf(" ") + 1) : post.title)
