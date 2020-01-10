@@ -1,0 +1,22 @@
+[
+  {
+    "name": "buildapcsales",
+    "frequency": 300,
+    "removeFirstWord": true
+  },
+  {
+    "name": "bapcsalescanada",
+    "frequency": 300,
+    "removeFirstWord": false
+  },
+  {
+    "name": "frugalmalefashion",
+    "frequency": 300,
+    "removeFirstWord": false
+  },
+  {
+    "name": "frugalmalefashioncdn",
+    "frequency": 300,
+    "removeFirstWord": false
+  }
+]
