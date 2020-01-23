@@ -55,7 +55,7 @@ client.on('message', message => {
 client.on('ready', () => {
   console.log('Before job instantiation');
 
-  const job = new CronJob('*/5 * * * *', () => {  // cron job currently set to ever 5 minutes
+  const job = new CronJob('*/5 * * * *', () => {  // cron job currently set to every 5 minutes
     const date = new Date();
     subreddits.forEach(subreddit => {
       const { name, frequency, removeFirstWord } = subreddit;
