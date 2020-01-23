@@ -1,1 +1,3 @@
-# have-you-reddit
+# Have u Reddit? 
+
+Readme coming soon :) 
